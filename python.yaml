@@ -1,0 +1,22 @@
+---
+- hosts: webservers
+  tasks:
+     - name: Install Python package
+       apt: 
+        pkg: 
+         - python3
+         - unzip
+         - python3-pip
+     
+     - name: Copy Python code on Application servers
+       get_url: url="https://github.com/anujdevopslearn/PythonServer/archive/refs/heads/main.zip" dest=/tmp/artifact.zip 
+  
+     - name: Extract Code
+       unarchive: src=/tmp/artifact.zip dest=/opt/ remote_src=True
+ 
+     - name: Run Python Code
+       shell: |
+         pip3 install -r requirements.txt --break-system-packages
+         nohup python3 app.py &
+       args:
+         chdir:  /opt/PythonServer-main
